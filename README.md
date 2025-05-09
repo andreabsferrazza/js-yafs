@@ -5,7 +5,16 @@ This is me writing a library to learn and explore the mechanisms of the fuzzy se
 
 ## Introduction
 The `yafs` class provides a set of functions for string manipulation, search, and comparison. It includes algorithms for subsequence matching, Levenshtein and Hamming distance calculations, and other advanced fuzzy matching techniques.
-You can combine search results to tailor the results to your needs.
+You can combine search results tailored to your needs.
+
+---
+## Install
+### HTML
+Put
+```
+<script src="path/to/yafs.js"></script>
+```
+after download
 
 ---
 ## Distance Matching
