@@ -1,30 +1,5 @@
 class yafs{
-	static create_subsequence_pattern(needle,gaps_threshold){
-		let gap = ".{0,"+gaps_threshold+"}";
-		let pattern = gap;
-		for(let i=0;i<needle.length;i++){
-			pattern=pattern+needle[i]+gap;
-		}
-		pattern=pattern+gap;
-		return new RegExp(pattern);
-	}
-	static subsequence_match(needle,haystack,gaps_threshold,case_sensitive=0){
-		// given a needle returns true if all the letters of the needle appears in the same order somewhere in the haystack, ignoring any other characters in between them
-		if( typeof needle !== "string" || typeof haystack !== "string"){
-			return -1;
-		}
-		if( needle.length <= 0 || haystack.length <= 0 ){
-			return -2;
-		}
-		if(case_sensitive===0){
-			needle=needle.toLowerCase();
-			haystack=haystack.toLowerCase();
-		}
-		needle = needle.replace(/[^a-zA-Z0-9']/g,"");
-		const pattern = yafs.create_subsequence_pattern(needle,gaps_threshold);
-		return haystack.match(pattern)===null ? 0 : 1;
-
-	}
+	// ======== DISTANCE MATCHING
 	static levenshtein(a,b){
 		if( typeof a !== "string" || typeof b !== "string"){
 			return -1;
@@ -95,7 +70,7 @@ class yafs{
 	}
 	static search_levenshstein(needle,haystack,threshold=0,case_sensitive=0){
 		/* -1 means error */
-		if( typeof needle !== "string" || typeof haystack !== "string" || typeof threshold !== "number" || threshold<0 || needle.length === 0 || haystack.length === 0){
+		if( typeof needle !== "string" || typeof haystack !== "string" || !Number.isInteger(threshold) || threshold<0 || needle.length === 0 || haystack.length === 0){
 			return {
 				needle: needle,
 				haystack: haystack,
@@ -157,6 +132,59 @@ class yafs{
 			found: found
 		};
 	}
+
+	// ======== SUBSEQUENCE MATCHING
+	static create_subsequence_pattern(needle,gaps_threshold){
+		let gap = ".{0,"+gaps_threshold+"}";
+		let pattern = gap;
+		for(let i=0;i<needle.length;i++){
+			pattern=pattern+needle[i]+gap;
+		}
+		pattern=pattern+gap;
+		return new RegExp(pattern);
+	}
+	static subsequence_match(needle,haystack,gaps_allowed,case_sensitive=0){
+		// given a needle returns true if all the letters of the needle appears in the same order somewhere in the haystack, ignoring any other characters in between them
+		if( typeof needle !== "string" || typeof haystack !== "string" || !Number.isInteger(gaps_allowed) || !Number.isInteger(case_sensitive) || gaps_allowed<0 ){
+			return -1;
+		}
+		if( needle.length <= 0 || haystack.length <= 0 ){
+			return -2;
+		}
+		if(case_sensitive===0){
+			needle=needle.toLowerCase();
+			haystack=haystack.toLowerCase();
+		}
+		needle = needle.replace(/[^a-zA-Z0-9']/g,"");
+		const pattern = yafs.create_subsequence_pattern(needle,gaps_allowed);
+		return haystack.match(pattern)===null ? 0 : 1;
+
+	}
+	static search_subsequence(needle,haystack,gaps_allowed){
+		/* -1 means error */
+		if( typeof needle !== "string" || typeof haystack !== "string" || needle.length === 0 || haystack.length === 0 || !Number.isInteger(gaps_allowed)){
+			return {
+				needle: needle,
+				haystack: haystack,
+				found: -1
+			};
+		}
+		const subsequence_found = yafs.subsequence_match(needle,haystack,gaps_allowed);
+		if(subsequence_found<0){
+			return {
+				needle: needle,
+				haystack: haystack,
+				found: -2
+			};
+		}
+		return {
+			needle: needle,
+			haystack: haystack,
+			found: subsequence_found
+		};
+	}
+
+	// ======== INCLUSION MATCHING
 	static search_numbers_included(needle,haystack,max_keys=1){
 		/* -1 means error */
 		if( typeof needle !== "string" || typeof haystack !== "string" || needle.length === 0 || haystack.length === 0){
@@ -204,41 +232,6 @@ class yafs{
 			found: found
 		};
 	}
-	static search_subsequence(needle,haystack){
-		/* -1 means error */
-		if( typeof needle !== "string" || typeof haystack !== "string" || typeof threshold !== "number" || needle.length === 0 || haystack.length === 0){
-			return {
-				needle: needle,
-				haystack: haystack,
-				found: -1
-			};
-		}
-		let subsequence_found = yafs.subsequence_match(needle,haystack,999);
-		if(subsequence_found<0){
-			return {
-				needle: needle,
-				haystack: haystack,
-				found: -2
-			};
-		}
-		return {
-			needle: needle,
-			haystack: haystack,
-			found: subsequence_found
-		};
-	}
-	static clean(str,case_sensitive=1){
-		if(typeof str !== "string"){
-			return "";
-		}
-		str = str.replace(/[^a-zA-Z0-9']/g," ");
-		str = str.replace(/[\s]{2,}/g," ");
-		if(case_sensitive===0){
-			str = str.toLowerCase();
-		}
-		str = str.trim();
-		return str;
-	}
 	static searchIncluded(needle,haystack){
 		/* -1 means error */
 		if( typeof needle !== "string" || typeof haystack !== "string" || needle.length === 0 || haystack.length === 0){
@@ -272,4 +265,24 @@ class yafs{
 			found: found
 		};
 	}
+
+	// ======== UTILITIES
+	static clean(str,case_sensitive=1){
+		if(typeof str !== "string"){
+			return "";
+		}
+		str = str.replace(/[^a-zA-Z0-9']/g," ");
+		str = str.replace(/[\s]{2,}/g," ");
+		if(case_sensitive===0){
+			str = str.toLowerCase();
+		}
+		str = str.trim();
+		return str;
+	}
+}
+
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
+  module.exports = yafs;
+} else {
+  window.yafs = yafs; // Make it accessible in the browser
 }

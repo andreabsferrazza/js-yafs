@@ -10,9 +10,9 @@ You can combine search results to tailor the results to your needs.
 ---
 ## Main Methods
 
-### `create_subsequence_pattern(needle, gaps_threshold)`
+### `create_subsequence_pattern(needle, gaps_allowed)`
 **Description:** Creates a regular expression that represents the `needle` string with allowed gaps defined by `gaps_threshold`. This is used in subsequence matching.
-### `subsequence_match(needle, haystack, gaps_threshold, case_sensitive)`
+### `subsequence_match(needle, haystack, gaps_allowed, case_sensitive)`
 **Description:** given a needle determine if all the letters of the needle appears in the same order somewhere in the haystack, ignoring any other characters in between them (defined by gaps_threshold)
 **Return:** `number`  
 - `1` → Match found.  
@@ -55,12 +55,17 @@ You can combine search results to tailor the results to your needs.
 - `found = -1` → Error in input.  
 - `found = 0` → No match.
 - `found > 0` → Matches found.
-### `search_subsequence(needle, haystack)`
+### `search_subsequence(needle, haystack,gaps_allowed)`
 **Description:** Determines whether `needle` appears as a subsequence within `haystack`, ignoring character gaps.  
 **Return:** `object` with data of the search and a `found` property
 - `found = -1` → Error in input.  
 - `found = 0` → No match.
 - `found > 0` → Matches found.
+**Example**
+```
+const result = yafs.search_subsequence("abc", "a random text with a b and c inside",999);
+console.log(result.found); // 1 (Match found)
+```
 ## Search juggling
 The `yafs` class allows multiple search techniques to be combined to refine results. For instance:
 - Using **Levenshtein distance** along with **subsequence matching** improves search accuracy for partial matches.
