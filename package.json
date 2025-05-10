@@ -8,7 +8,12 @@
 		"type": "git",
 		"url": "https://github.com/andreabsferrazza/yafs.js.git"
 	},
-	"keywords": ["fuzzy", "levenshtein", "subsequence", "fuzzy-search"],
+	"keywords": [
+		"fuzzy",
+		"levenshtein",
+		"subsequence",
+		"fuzzy-search"
+	],
 	"homepage": "https://github.com/andreabsferrazza/yafs.js",
 	"bugs": {
 		"url": "https://github.com/andreabsferrazza/yafs.js/issues"

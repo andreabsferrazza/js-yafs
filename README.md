@@ -12,7 +12,7 @@ You can combine search results tailored to your needs.
 ### HTML
 Put
 ```
-<script src="path/to/yafs.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/andreabsferrazza/yafs.js@latest/yafs.min.js"></script>
 ```
 after download
 

@@ -1,3 +1,10 @@
+/*!
+ * yafs.js - Yet Another Fuzzy Search
+ * License: GPL-3.0
+ * Author: Andrea B Sferrazza
+ * Repository: https://github.com/andreabsferrazza/yafs.js
+ */
+
 class yafs{
 	// ======== DISTANCE MATCHING
 	static levenshtein(a,b){
