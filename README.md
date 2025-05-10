@@ -1,4 +1,4 @@
-# js-yafs
+# yafs.js
 ## Yet Another Fuzzy Search
 
 This is me writing a library to learn and explore the mechanisms of the fuzzy search, subsequence search, the distances of Levenshtein and Hamming and also practice JS.

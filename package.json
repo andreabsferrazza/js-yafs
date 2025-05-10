@@ -6,12 +6,12 @@
 	"license": "GPL-3.0",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/andreabsferrazza/yafs.git"
+		"url": "https://github.com/andreabsferrazza/yafs.js.git"
 	},
 	"keywords": ["fuzzy", "levenshtein", "subsequence", "fuzzy-search"],
-	"homepage": "https://github.com/andreabsferrazza/yafs",
+	"homepage": "https://github.com/andreabsferrazza/yafs.js",
 	"bugs": {
-		"url": "https://github.com/andreabsferrazza/yafs/issues"
+		"url": "https://github.com/andreabsferrazza/yafs.js/issues"
 	},
 	"devDependencies": {
 		"jest": "^29.7.0"
