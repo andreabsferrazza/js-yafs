@@ -1,8 +1,22 @@
 {
-  "devDependencies": {
-    "jest": "^29.7.0"
-  },
-  "scripts": {
-    "test": "jest"
-  }
+	"name": "yafs",
+	"version": "1.0.0",
+	"description": "Yet Another Fuzzy Search",
+	"author": "Andrea B Sferrazza",
+	"license": "GPL-3.0",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/andreabsferrazza/yafs.git"
+	},
+	"keywords": ["fuzzy", "levenshtein", "subsequence", "fuzzy-search"],
+	"homepage": "https://github.com/andreabsferrazza/yafs",
+	"bugs": {
+		"url": "https://github.com/andreabsferrazza/yafs/issues"
+	},
+	"devDependencies": {
+		"jest": "^29.7.0"
+	},
+	"scripts": {
+		"test": "jest"
+	}
 }
