@@ -75,9 +75,9 @@ class yafs{
 		}
 		return distance;
 	}
-	static search_levenshstein(needle,haystack,threshold=0,case_sensitive=0){
+	static search_levenshstein({needle,haystack,threshold=0,case_sensitive=0}){
 		/* -1 means error */
-		if( typeof needle !== "string" || typeof haystack !== "string" || !Number.isInteger(threshold) || threshold<0 || needle.length === 0 || haystack.length === 0){
+		if( typeof needle !== "string" || typeof haystack !== "string" || !Number.isInteger(threshold) || threshold<0 || haystack.length === 0){
 			return {
 				needle: needle,
 				haystack: haystack,
@@ -85,6 +85,16 @@ class yafs{
 				distances: null,
 				haystack_vector: null,
 				found: -1
+			};
+		}
+		if(needle.length === 0){
+			return {
+				needle: needle,
+				haystack: haystack,
+				threshold: threshold,
+				distances: null,
+				haystack_vector: null,
+				found: 0
 			};
 		}
 		needle = yafs.clean(needle,case_sensitive);
@@ -150,30 +160,48 @@ class yafs{
 		pattern=pattern+gap;
 		return new RegExp(pattern);
 	}
-	static subsequence_match(needle,haystack,gaps_allowed,case_sensitive=0){
+	static subsequence_match(needle,haystack,gaps_allowed,case_sensitive=false){
 		// given a needle returns true if all the letters of the needle appears in the same order somewhere in the haystack, ignoring any other characters in between them
-		if( typeof needle !== "string" || typeof haystack !== "string" || !Number.isInteger(gaps_allowed) || !Number.isInteger(case_sensitive) || gaps_allowed<0 ){
+		if( typeof needle !== "string" || typeof haystack !== "string" || !Number.isInteger(gaps_allowed) || typeof case_sensitive !== "boolean" || gaps_allowed<0 ){
 			return -1;
 		}
-		if( needle.length <= 0 || haystack.length <= 0 ){
+		if( needle.length < 0 || haystack.length < 0 ){
 			return -2;
 		}
-		if(case_sensitive===0){
+		if(needle.length===0 || haystack.length===0){
+			return 0;
+		}
+		if(case_sensitive===false){
 			needle=needle.toLowerCase();
 			haystack=haystack.toLowerCase();
 		}
-		needle = needle.replace(/[^a-zA-Z0-9']/g,"");
 		const pattern = yafs.create_subsequence_pattern(needle,gaps_allowed);
 		return haystack.match(pattern)===null ? 0 : 1;
 
 	}
-	static search_subsequence(needle,haystack,gaps_allowed){
+	static search_subsequence({needle,haystack,gaps_allowed=9999,ignore_numbers=false,ignore_letters=false,case_sensitive=false,only_letters_and_numbers=true}){
 		/* -1 means error */
-		if( typeof needle !== "string" || typeof haystack !== "string" || needle.length === 0 || haystack.length === 0 || !Number.isInteger(gaps_allowed)){
+		if( typeof needle !== "string" || typeof haystack !== "string" || haystack.length === 0 || !Number.isInteger(gaps_allowed)){
 			return {
 				needle: needle,
 				haystack: haystack,
 				found: -1
+			};
+		}
+		if(ignore_numbers===true){
+			needle = needle.replace(/[0-9]/g,"");
+		}
+		if(ignore_letters===true){
+			needle = needle.replace(/[a-zA-Z]/g,"");
+		}
+		if(only_letters_and_numbers===true){
+			needle = needle.replace(/[^a-zA-Z0-9']/g,"");
+		}
+		if(needle.length === 0){
+			return {
+				needle: needle,
+				haystack: haystack,
+				found: 0
 			};
 		}
 		const subsequence_found = yafs.subsequence_match(needle,haystack,gaps_allowed);
@@ -181,25 +209,34 @@ class yafs{
 			return {
 				needle: needle,
 				haystack: haystack,
-				found: -2
+				found: subsequence_found
 			};
 		}
 		return {
 			needle: needle,
 			haystack: haystack,
+			ignore_numbers: ignore_numbers,
 			found: subsequence_found
 		};
 	}
 
 	// ======== INCLUSION MATCHING
-	static search_numbers_included(needle,haystack,max_keys=1){
+	static search_numbers_included({needle,haystack,max_keys=999}){
 		/* -1 means error */
-		if( typeof needle !== "string" || typeof haystack !== "string" || needle.length === 0 || haystack.length === 0){
+		if( typeof needle !== "string" || typeof haystack !== "string" || haystack.length === 0){
 			return {
 				needle: needle,
 				haystack: haystack,
 				haystack_vector: null,
 				found: -1
+			};
+		}
+		if(needle.length === 0){
+			return {
+				needle: needle,
+				haystack: haystack,
+				haystack_vector: null,
+				found: 0
 			};
 		}
 		needle = yafs.clean(needle);
@@ -213,11 +250,14 @@ class yafs{
 		for(let i=0;i<haystack_vector.length;i++){
 			haystack_vector[i]=0;
 		}
+		// it tells us if at least 1 search has been executed
+		let num_keys_found=0;
 		for(let i=0;i<keys.length;i++){
 			for(let j=0;j<words.length;j++){
 				let ok=0;
 				// we check if the word is a number
 				if(keys[i].match(/^[0-9]+$/)!==null && keys.length<=max_keys){
+					num_keys_found++;
 					// max_keys is the maximum number of words that the needle must have
 					if(yafs.searchIncluded(keys[i],words[j]).found>0){
 						ok=1;
@@ -235,6 +275,7 @@ class yafs{
 			needle: needle,
 			haystack: haystack,
 			max_keys: max_keys,
+			num_keys_found: num_keys_found,
 			haystack_vector: haystack_vector,
 			found: found
 		};
