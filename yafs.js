@@ -160,7 +160,7 @@ class yafs{
 		pattern=pattern+gap;
 		return new RegExp(pattern);
 	}
-	static subsequence_match(needle,haystack,gaps_allowed,case_sensitive=false){
+	static subsequence_match({needle,haystack,gaps_allowed=9999,case_sensitive=false}){
 		// given a needle returns true if all the letters of the needle appears in the same order somewhere in the haystack, ignoring any other characters in between them
 		if( typeof needle !== "string" || typeof haystack !== "string" || !Number.isInteger(gaps_allowed) || typeof case_sensitive !== "boolean" || gaps_allowed<0 ){
 			return -1;
@@ -204,7 +204,7 @@ class yafs{
 				found: 0
 			};
 		}
-		const subsequence_found = yafs.subsequence_match(needle,haystack,gaps_allowed);
+		const subsequence_found = yafs.subsequence_match({needle:needle,haystack:haystack,gaps_allowed:gaps_allowed});
 		if(subsequence_found<0){
 			return {
 				needle: needle,
@@ -259,7 +259,7 @@ class yafs{
 				if(keys[i].match(/^[0-9]+$/)!==null && keys.length<=max_keys){
 					num_keys_found++;
 					// max_keys is the maximum number of words that the needle must have
-					if(yafs.searchIncluded(keys[i],words[j]).found>0){
+					if(yafs.searchIncluded({needle:keys[i],haystack:words[j]}).found>0){
 						ok=1;
 					}else{
 						ok=0;
@@ -280,7 +280,7 @@ class yafs{
 			found: found
 		};
 	}
-	static searchIncluded(needle,haystack){
+	static searchIncluded({needle,haystack}){
 		/* -1 means error */
 		if( typeof needle !== "string" || typeof haystack !== "string" || needle.length === 0 || haystack.length === 0){
 			return {
