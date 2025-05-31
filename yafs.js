@@ -75,7 +75,7 @@ class yafs{
 		}
 		return distance;
 	}
-	static search_levenshstein({needle,haystack,threshold=0,case_sensitive=0}){
+	static search_levenshtein({needle,haystack,threshold=0,case_sensitive=0}){
 		/* -1 means error */
 		if( typeof needle !== "string" || typeof haystack !== "string" || !Number.isInteger(threshold) || threshold<0 || haystack.length === 0){
 			return {
